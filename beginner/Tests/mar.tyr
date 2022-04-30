@@ -1,0 +1,53 @@
+type T {
+  public type val global = 42
+
+  // simple test
+  // the last condition is the test condition
+  test "use global" {
+    42 == global
+  }
+
+  test "return global" {
+    // return can be used from within tests to exit early
+    if (42 == global)
+      return true
+
+    var r = global
+    0 == r
+  }
+
+  test "crash" {
+    var x = 0;
+    // set to true and see what happens
+    val crash = false
+    while crash {
+      ++x
+    }
+    true
+  }
+
+  test "private API" <: noCompile {
+    var arr = new container.Array[int]
+    // this is private and it should be
+    null != arr.data
+  }
+
+  test "typed literals" <: noCompile {
+    // a signed cannot be compared with an unsigned
+    // also, both literals have different size
+    0 == 0U
+  }
+
+  test "typed literals fixed" {
+    0L.unsign() == 0U
+  }
+
+  // remove the comment and see what happens here
+  test "corrupt cast" /*<: noWarning*/ {
+    var p = 0
+    val ref : Ref[int] = p
+    // cast is highly dubious and, hence, results in a warning
+    0 != int !! ref
+    true
+  }
+}

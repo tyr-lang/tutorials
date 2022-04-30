@@ -1,0 +1,50 @@
+type ExampleUse1 := Ref[int]
+type ExampleUse2 := container.Array[int]
+type ExampleUse3 := Ref[container.Array[container.Array[int]]]
+type ExampleUse4 := container.Array[container.Array[container.Array[Ref[Integer[32]]]]]
+
+type Vector2 := Vector[2U]
+
+class Vector[D : container.size_t] {
+  // note: In Tyr 0.6, there is no way to restrict type parameters to types that
+  // define + and *. This is expected to be implemented in Tyr 0.7.
+  // For now, we will stick to floats.
+  with B := float
+
+  private var data : container.FlatSizedArray[B, D]
+  
+  public def apply(dimension : int) = data(dimension)
+  public def update(dimension : int, value : B) = data(dimension) = value
+  
+  public def + (other : Vector[D]) {
+    val r = new Vector[D]
+    data.foreach i, x do {
+      r.data(i) = x + other.data(i)
+    }
+    r
+  }
+
+  test "plus" {
+    var v = new Vector[2U]
+
+    v(0) = 1f
+    v(1) = 0f
+
+    var v2 = v + v
+
+    val r = v2(0) == 2f && v2(1) == 0f
+
+    delete v
+    delete v2
+
+    r
+  }
+
+  test "equivalence" {
+    // While this might look like an obvious property making this example
+    // idiotic, it is not. Actually, this is what one would like to get, but
+    // given that this is even true if the instances stem from unrelated
+    // imported libraries is non-trivial to get correct.
+    Vector[2U] == Vector[2U] &! Vector2 == Vector[2U]
+  }
+}

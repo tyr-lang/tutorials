@@ -1,0 +1,29 @@
+/**
+ * Define a type that contains our entry point and a simple test case.
+ */
+type hello {
+
+  /**
+   * A "type def" defines a stateless function.
+   *
+   * " : void " defines that it will not return a result.
+   *
+   * " <: entryPoint " adds the entryPoint property to the function; this allows
+   * us to use it as the first function to be executed when creating a binary.
+   *
+   * " = "Hello World!\n"!!;" implements the function by printing the desired
+   * text and a new line to the console
+   */
+  type def myMain : void <: entryPoint = "Hello World!\n"!!;
+
+  /**
+   * This is a test printing text to the console.
+   *
+   * Returning true signals that the test is successful.
+   */
+  test "hello world" {
+    "Hello World from Test!\n"!!;
+
+    return true
+  }
+}

@@ -1,0 +1,7 @@
+src=src
+name=tutorials.beginner.HelloWorld
+
+# whenever an entry point could be provided by draupnir, this value is used
+# instead of creating an error message if multiple entry points exist
+# Note: the largest match wins, so "myMain" would also work here
+entryPoint=tutorials.beginner.HelloWorld.hello.myMain

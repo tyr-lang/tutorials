@@ -1,0 +1,192 @@
+with container.ArrayBuffer
+with container.size_t
+with container.index_t
+
+// defaults can also be used on CT parameters
+// note: except for constructor calls, an empty CT list [] has to be provided to
+// distinguish between Cursor, i.e. the template itself, and Cursor[], i.e. an
+// shorthand for Cursor[StringLiteral]. This is very important for the semantics
+// of, e.g. type alias definitions because in 'type C := Cursor' we are allowed
+// to write C[int]. This would not be possible if the [] would not be mandatory.
+// Because, if [] were optional, C would alias Cursor[StringLiteral] instead of
+// the type constructor itself.
+type Cursor[T : Type = StringLiteral] {
+
+  // by name parameters can be used on CT argument lists
+  val target : ArrayBuffer[T := T]
+
+  var position : size_t
+
+  // the placement operator here is used to place the argument in a field
+  // note: Default values do not perform implicit conversions. However, you can
+  // call implicit explicitly. index_t has no literals on its own, so we have to
+  // create the value this way.
+  new (target := target : ArrayBuffer[T], position : index_t = 0.implicit()){
+    this.position = position.unpack
+  }
+
+  def step(this : Ref[Cursor[T]], stride : index_t = 1.implicit()) : void {
+    position += stride.unpack
+
+    // ensure that the position is valid
+    if (position < 0U) position = 0U
+    else if (position >= target.size()) position = target.size() - 1U
+  }
+
+  // allows us to use the cursor as a function taking no parameters
+  // note: In this case, no parameters are provided. If we would not want to use
+  // the () to get to the target, we could also overload "implicit".
+  // Implicit, however, requires a Proxy property to work as expected.
+  // If no apply is provided, the update can be implemented using an operator
+  // `=`. Note that `=` requires a literal identifier because it is an operator
+  // keyword.
+  def apply() = target(position)
+
+  // allows us to turn an 'this.apply() = v' pattern into 'this.update(v)'
+  // note: this can only work if the apply call did match
+  // note: the apply call is deleted if it is replaced by an update call
+  // note: an alternative is 'def `=` (v : T) ...' allowing 'this = v'
+  def update(v : T) = target(position) = v
+
+  test "use" {
+    var arr = new ArrayBuffer[StringLiteral]
+    arr += "first"
+    arr += "second"
+    arr += "last"
+
+    var c = new Cursor[StringLiteral](target := arr)
+
+    // call c.apply()
+    c() !!; "\n" !!;
+
+    val r = 0U == c.position
+
+    delete arr
+    r
+  }
+
+  test "by wrong name" <: noCompile {
+    var arr = new ArrayBuffer[StringLiteral]
+    var c = new Cursor[StringLiteral](target := arr)
+    
+    // the compiler will tell you that for the shape where you pass an integer
+    // called 'position' to a function step won't work
+    // however, it will tell you that you could use a function that has named
+    // parameters this and stride
+    c.step(position := 0)
+  }
+
+  test "step" {
+    var arr = new ArrayBuffer[StringLiteral]
+    arr += "first"
+    arr += "second"
+    arr += "last"
+
+    var c = new Cursor[StringLiteral](target := arr)
+
+    c() !!; "\n" !!;
+    // pass stride by name
+    c.step(stride := 0)
+    c() !!; "\n" !!;
+    // pass stride by position
+    c.step(1)
+    c() !!; "\n" !!;
+    // pass stride by default
+    c.step()
+    c() !!; "\n" !!;
+    c.step(2)
+    c() !!; "\n" !!;
+
+    val r = 2U == c.position
+
+    delete arr
+    r
+  }
+
+  test "explicit dispatch" {
+    var arr = new ArrayBuffer[StringLiteral]
+    arr += "first"
+    arr += "second"
+    arr += "last"
+
+    // an empty argument list can be used to get the default
+    var c = new Cursor[](target := arr)
+    // or it can be omitted completely in constructor calls
+    var d = new Cursor(target := arr, position := 2)
+
+    // Also, explicit passing of this can be used to use one object for
+    // dispatching, both, static and dynamic, and another for function execution.
+    // Use this *very very* carefully as it breaks the OOP abstraction
+    "second" == {c.step(this := d, stride := -1); c(this := d) }
+  }
+
+  test "step constructor param" <: noCompile{
+    var arr = new ArrayBuffer[StringLiteral]
+    // here, we get an error because the parameter is called "position"
+    var d = new Cursor(target := arr, step := 2)
+  }
+
+  test "mixed" {
+    var arr = new ArrayBuffer[StringLiteral]
+    arr += "first"
+    arr += "second"
+    arr += "last"
+
+    // named and positional parameters can be mixed
+    var c = new Cursor(target := arr, 1)
+    // after inserting the named parameters, remaining slots will be filled with
+    // positional parameters
+    var d = new Cursor(position := 1, arr)
+
+    "second" == c()
+  }
+
+  test "step neg" {
+    var arr = new ArrayBuffer[StringLiteral]
+    arr += "first"
+    arr += "second"
+    arr += "last"
+
+    var c = new Cursor[StringLiteral](target := arr)
+
+    c() !!; "\n" !!;
+    c.step()
+    c() !!; "\n" !!;
+    c.step()
+    c() !!; "\n" !!;
+    c.step(-5)
+    c() !!; "\n" !!;
+    c.step(-1)
+    c() !!; "\n" !!;
+
+    val r = 0U == c.position
+
+    delete arr
+    r
+  }
+
+  test "step and update" {
+    var arr = new ArrayBuffer[StringLiteral]
+    arr += "first"
+    arr += "second"
+    arr += "last"
+
+    var c = new Cursor[StringLiteral](target := arr)
+
+    // call c.update
+    c() = "1"
+    c.step()
+    c() = "2"
+    c.step()
+    c() = "3"
+
+    // print 123
+    arr.foreach c do (c!!)
+    "\n" !!;
+
+    val r = 2U == c.position
+
+    delete arr
+    r
+  }
+}

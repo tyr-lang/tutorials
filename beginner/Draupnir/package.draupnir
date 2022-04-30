@@ -1,0 +1,19 @@
+# this directory as source directory
+source = . 
+
+# the name of this library
+name=tutorials.beginner.Draupnir
+
+# use code from tutorials.beginner.HelloWorld
+with=tutorials.beginner.HelloWorld
+# use code from tyr.io
+with=tyr.io
+
+# allow extern realizations to access symbols from libc under the name c
+# note: draupnir will complain about this definition because it is provided by
+#       tyr.lang already
+extern c from libc
+
+# whenever an entry point could be provided by draupnir, this value is used
+# instead of creating an error message if multiple entry points exist
+entryPoint=main

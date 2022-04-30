@@ -1,0 +1,26 @@
+type upper {
+  val name : StringLiteral;
+  new (name := name : StringLiteral = "unnamed");
+
+  def f { "call f in upper on "!!;name!!;"\n"!! }
+}
+
+type lower <: upper {
+  new (name : StringLiteral = "unnamed lower") {
+    upper.new(name)
+  }
+
+  override
+  def f { "call f in lower on "!!;name!!;"\n"!! }
+
+  test "static lower" {
+    val x = new lower
+    x.f()
+  }
+
+  test "static upper" {
+    // create a lower instance, but forget about it and use it as an upper
+    val x : upper = new lower
+    x.f()
+  }
+}

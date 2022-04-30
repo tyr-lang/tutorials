@@ -1,0 +1,61 @@
+type T {
+  test "create" {
+    var arr = new container.Array[int](2)
+    
+    val r = 2U == arr.size()
+    
+    delete arr
+
+    r
+  }
+
+  test "use" {
+    var arr = new container.Array[int](2)
+
+    arr(0) = 3
+    arr(1) = 5
+
+    val r = 8 == arr(0) + arr(1)
+    
+    delete arr
+
+    r
+  }
+
+  test "use buffer" {
+    var arr = new container.ArrayBuffer[int]
+
+    arr += 3
+    arr += 5
+
+    val r = 8 == arr(0) + arr(1)
+    
+    delete arr
+
+    r
+  }
+
+  type def sum(arr : container.ArrayBuffer[int]) = arr.fold(0) l,r do (l+r)
+
+  test "sum" {
+    var arr = new container.ArrayBuffer[int]
+
+    arr += 3
+    arr += 5
+
+    val r = 8 == sum(arr) && arr.forall x do (0 != x) && arr.exists x do (3 == x)
+    
+    delete arr
+
+    r
+  }
+
+  test "use flat" {
+    var arr = new container.FlatSizedArray[int, 2U]
+
+    arr(0) = 3
+    arr(1) = 5
+
+    8 == arr(0) + arr(1)
+  }
+}

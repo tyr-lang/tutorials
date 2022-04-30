@@ -1,0 +1,11 @@
+// this is tutorials.beginner.Namespaces.impl.T
+class T {
+  test "use" {
+    T == _root_.tutorials.beginner.Namespaces.impl.T
+  }
+}
+
+// this creates a type tutorials.beginner.Namespaces.impl.Array that is
+// identical to tyr.lang.container.Array
+// note: a type alias has the form type ID := expr even if expr yields a class
+type Array := tyr.lang.container.Array

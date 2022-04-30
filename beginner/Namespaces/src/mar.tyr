@@ -1,0 +1,45 @@
+// this is tutorials.beginner.Namespaces.T
+
+// import the array type
+with tyr.lang.container.Array
+
+// this import is visible for any type in this file
+with globalB := tutorials.beginner;
+
+class T {
+  test "sub" {
+    T != impl.T
+  }
+
+  test "use" {
+    T == _root_.tutorials.beginner.Namespaces.T
+  }
+
+  test "with" <: noCompile {
+    T == localB.Namespaces.T
+  }
+
+  test "with file" {
+    T == globalB.Namespaces.T
+  }
+
+  test "array" {
+    T != Array[int]
+  }
+
+  test "array alias" {
+    impl.Array[int] == Array[int]
+  }
+}
+
+class local {
+  with localB := tutorials.beginner;
+
+  test "with" {
+    T == localB.Namespaces.T
+  }
+
+  test "with file" {
+    T == globalB.Namespaces.T
+  }
+}

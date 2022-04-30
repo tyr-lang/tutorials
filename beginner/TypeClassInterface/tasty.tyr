@@ -1,0 +1,53 @@
+// all tasty fruits are also fruits
+interface TastyFruit <: Fruit {
+  def eat() : void = "Yummy!\n"!!
+}
+
+// Holzapfel (lat./engl. Malus sylvestris) tasts so bad that you won't eat it.
+// But, it's an apple from a biological point of view.
+class Holzapfel <: Apple;
+
+// It is, both, an appla end tasty
+class Granny <: Apple, TastyFruit {
+
+  // on eat, you will notice the sour flavor
+  override
+  def eat() : void = "Yummy! But sour.\n"!!
+
+  test "eat" {
+    val f = new Granny
+    // print yummy but sour
+    f.eat()
+  }
+  test "eat fruit" <: noCompile {
+    val f : Fruit = new Orange
+    // not every fruit is edible
+    f.eat()
+  }
+  test "eat fruits" {
+    // create a collection of fruits
+    val arr = new container.ArrayBuffer[Fruit]
+
+    // add some apples and oranges
+    arr += new Orange
+    arr += new Granny
+    arr += new Holzapfel
+    arr += new Orange
+
+    // call eat if possible
+    arr.foreach f do {
+      if (TastyFruit ? f) (TastyFruit ! f).eat()
+      else "Not edible!\n"!!
+    }
+    // note: this prints
+    // Yummy!
+    // Yummy! But sour.
+    // Not edible!
+    // Yummy!
+
+
+    // clean up
+    arr.foreach f do {delete f}
+    delete arr
+  }
+}

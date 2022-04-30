@@ -1,0 +1,35 @@
+// note: an implicit private would be private to the parent scope akin to
+// members omitting the parameter being private to their embracing type.
+// Nonetheless, T is a scope. Hence, T can be private to its own scope.
+private[T] type T {
+  public type val global = 42
+
+  test "public type" {
+    // tyr.lang.int is public
+    var p : int
+  }
+
+  test "private type" <: noCompile {
+    // tyr.lang.ITable has default visibility but stems from tyr.lang
+    var p : ITable
+  }
+
+  test "private member" <: noCompile {
+    var p = new container.Array[int](1)
+    // data is, obviously, private
+    p.data
+  }
+}
+
+private type S /* not allowed: <: T */ {
+
+  // also not allowed: you have to access T before accessing global and T is
+  // inaccessible from here
+  // private type val global = T.global
+
+  test "bypass" {
+    // here, we are in a test and tests can bypass inaccessible declarations in
+    // the same library
+    42 == T.global
+  }
+}

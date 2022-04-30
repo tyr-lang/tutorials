@@ -1,0 +1,9 @@
+*~
+
+# binary libraries and debug asts
+out.*.sg
+*.dot
+**/*.tl
+*.ll
+*.bc
+*.tests

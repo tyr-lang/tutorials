@@ -1,0 +1,28 @@
+/**
+ * Use some functions from ctype.h
+ */
+type ctype {
+  // the definition in Tyr has to match the c definition
+  type def isalnum(codepoint: int) : int extern c.isalnum;
+
+  // however, a useful definition in Tyr would involve a bit of wrapper code
+  type def isAlnum(c : byte) : bool {
+    val codepoint = int !! c
+    0 != isalnum(codepoint)
+  }
+
+  test "alnum" {
+    3 == ("Pow!! .-/\\_.".bytes().count c do (isAlnum(c)))
+  }
+
+  with tyr.io.CFile;
+  with tyr.io.CString;
+
+  type val out : CFile extern c.stdout;
+
+  test "stdout" {
+    var s = new CString("Hello out!")
+    out.put(s)
+    delete s
+  }
+}

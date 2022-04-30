@@ -1,0 +1,348 @@
+/**
+ * A set of tests illustrating basic control flow concepts
+ */
+type flow {
+  test "value" {
+    // make the value 7 available under the name x
+    val x = 7
+    // check that x equals 7
+    7 == x
+  }
+
+  // Note that this test has a noCompile property.
+  // It tells the compiler to check that something in its body creates an error.
+  // If, however, the compiler can compile the body, the test will fail.
+  test "value no update" <: noCompile {
+    val x = 7
+    // this is not allowed because values cannot be modified
+    // note: run "draupnir test -v" to see expected errors
+    // note: You will be told that "=" is not visible. This is because a value's
+    //       type can itself define an operator "=" that can be used on values.
+    x = 7
+    7 == x
+  }
+
+  test "variable" {
+    // store the value 7 in a variable x
+    // if required, the compiler will reserve some memory to store the value
+    var x = 7
+    // check that x is still 7
+    7 == x
+  }
+
+  test "variable update" {
+    // here, we define explicitly that x is of type int
+    var x : int = 7
+    // update x to 3
+    x = 3
+    // as expected, x is now 3
+    3 == x
+  }
+
+  test "variable uninitialized" {
+    // if we define that x is an int, initializing it is not required
+    var x : int
+    // update x to 3
+    x = 3
+    // as expected, x is now 3
+    3 == x
+  }
+
+  test "variable unknown" <: noCompile {
+    // If we do not tell the compiler what x is, the compiler will complain.
+    var x
+  }
+
+  test "variable update k" <: noCompile {
+    var x = 7
+    // We hit the wrong key and got a key.
+    // As no k is visible here, the compiler will ask us to fix the code.
+    // note: You will be told that k is not visible. This is because it could
+    //       also be that one just forgot to add a with expression to include
+    //       a library.
+    k = 3
+    3 == x
+  }
+
+  test "variable update string" <: noCompile {
+    var x = 7
+    // update x to 3
+    // note: You will be presented with an alternative.
+    x = "three"
+    3 == x
+  }
+
+  test "if" {
+    var x = 7
+    // update x to 3 if x is 2 (which it is not)
+    if (2 == x) {
+      x = 3
+    }
+    // x is still 7
+    7 == x
+  }
+
+  test "if else" {
+    var x = 7
+    // update x to 3 if x is 2 (which it is not)
+    if (2 == x) {
+      x = 3
+    } else {
+      // otherwise, update it to 4
+      x = 4
+    }
+    // x is now 4
+    4 == x
+  }
+
+  test "if condition" <: noCompile{
+    var x = 7
+    // If condition requires a boolean.
+    // note: You will be presented with the information that x is of 
+    //       Ref[Integer[32]] and it cannot be converted to bool. This means
+    //       that is a modifiable 32bit integer. A bool is either true or false.
+    //       In Tyr, implicit modifications exists. So, x can implictly become
+    //       an Integer[32], i.e. an 32bit integer *value*. But, unlike C, there
+    //       is no implicit conversion from integers to truth values.
+    if (x) {
+      x = 3
+    }
+    7 == x
+  }
+
+  test "while" {
+    var x = 7
+    while(x > 0){
+      // You may have noticed that this is the first ';' in this Tutorial.
+      // In most cases, Tyr will guess where a statement ends assuming that
+      // there is one statement per line. However, if a line ends with an
+      // operator, it is assumed that the statement continues in the next line.
+      // This is sometimes required to split complex expressions.
+      "hello!\n"!!;
+      --x
+    }
+  }
+
+  test "operators no semicolon" <: noCompile {
+    var x = 7
+    // As explained above, Tyr will get stuck trying to find matching operators.
+    // The lines below are seen as "hello" !! -- x
+    // However, it could make sens e.g. for 3 + -x
+    "hello!\n"!!
+    --x
+  }
+
+  test "operators multi line" {
+    var x = 7
+    // Just for illustration. Do not format simple code like this ;)
+    // This is: 3 + - x == -4
+    3 +
+    -x ==
+    -4
+  }
+
+  test "operators no postfix" {
+    var x = 7
+    // Here, the line ends after the string. But it will also not appear in the
+    // output.
+    "invisible string literal"
+    --x
+  }
+
+  test "do while" {
+    var x = 3
+    do {
+      "hello!\n"!!;
+      --x
+      // Here, x is modified first, so it no longer seven when the condition is
+      // checked the first time. Therefore, the first check is performed against
+      // x == 2 which is not equal three and greater than 0. This is true for
+      // two more runs resulting in a total of three hellos appearing in this
+      // test's output.
+    } while (x != 3 && x > 0)
+  }
+
+  test "switch" {
+    var x = 3
+    // Switch will evaluate x and continue in based on its value
+    switch x {
+      // if it were 1 we would set it to 42
+      if 1: { x = 42 }
+      // if it were 3 we would set it to 7
+      if 3: { x = 7 }
+      // otherwise, we ould set it to -1
+      else { x = -1 }
+
+      // note: Unlike C or Java, Tyr won't jump to the next block of code in the
+      //       list. Implicit jumps are rarely useful but create lots of errors.
+
+      // note: Unlike C or Java, Tyr won't allow switch expressions without an
+      //       else clause. This is a syntax error. If no default handling is
+      //       intended, this has to be made explicit.
+    }
+
+    7 == x
+  }
+
+  test "switch else missing" {
+    var x = 3
+    switch x {
+      if 1: { x = 42 }
+      if 3: { x = 7 }
+      // an empty block indicates that we decided not to react to other cases
+      else {}
+    }
+
+    7 == x
+  }
+
+  test "return" {
+    var x = 3
+    while(x > 0) {
+      if(1 == x) {
+        // in functions and tests, execution can be ended with a return.
+        return true
+      }
+
+      --x
+    }
+    return false
+  }
+
+  test "return mixed" {
+    var x = 3
+    while(x > 0) {
+      // see what happens if 1 is changed to -1
+      if(1 == x) {
+        return true
+      }
+
+      --x
+    }
+
+    // return can be mixed with implicitly returning the last statement of the
+    // body
+    false
+  }
+
+  test "return mixed void" <: noCompile {
+    var x = 3
+    while(x > 0) {
+      if(1 == x) {
+        // Although, tests succeed if they reach the end without returning a
+        // bool value or any value at all, still, they must always return a bool
+        // Likewise, a function cannot mix returning void and values even if the
+        // type were inferred.
+        return;
+      }
+
+      --x
+    }
+
+    return false;
+  }
+
+  test "binder" {
+    // For our last form of control flow, we need an array buffer; basically, a
+    // resizable array or array-backed list.
+    // Note: The StringLiteral in the square brackets tells the compiler that
+    // the buffer consist of StringLiterals. If one would accidentally try to
+    // insert an int, an error would be created.
+    var buffer = new container.ArrayBuffer[StringLiteral]
+
+    // add some content to the buffer
+    buffer += "one"
+    buffer += "two"
+    buffer += "three"
+
+    // We could now use a while loop and print the array's contents the C way.
+    // Or, we use the Tyr way:
+    // This construct is called a generalized binder, because it generalizes
+    // binding variables, as known in generalized for loops in, for instance,
+    // Java. The concept itself allows binding any number of variables and
+    // blocks to a suitable function.
+    // Note: This will create a local variable e and a block using it (the block
+    // after do). The two are passed to the foreach function of buffer which
+    // will create an iterator, set e to the current value, execute the block
+    // and repeat that until no element is left and the iterator can be deleted.
+    // Generalized minders safe us from writing a lot of boiler plate code.
+    // Nonetheless, the whole code is inlined at call site and, thus, as
+    // efficient as if it were written by the programmer.
+    buffer.foreach e do {
+      e !!;
+      "\n"!!
+    }
+
+    // after we are done with the buffer, we should delete it to release its
+    // memory
+    delete buffer
+  }
+
+  test "binder fold" {
+    var buffer = new container.ArrayBuffer[int]
+
+    buffer += 3
+    buffer += 4
+    buffer += 5
+
+    val result = buffer.fold(0) l,r do { l+r }
+
+    delete buffer
+
+    //12 == (buffer.fold(0) l,r do { l+r })
+    12 == result
+  }
+
+  test "binder and blocks" {
+    var buffer = new container.ArrayBuffer[StringLiteral]
+
+    buffer += "one"
+    buffer += "two"
+    buffer += "three"
+
+    // Blocks returning their last statement can be used to group and chain
+    // computations yielding results
+    // If used to it, this is actually pretty common to have several test
+    // conditions at the end of a test definition.
+    {
+      // in this last example, we show that binders can even return values
+      buffer.forall e do {
+        // all elements are not null
+        null != e
+      }
+
+    // The bound variable can be typed explicitly. This is, however, usually not
+    // required.
+    } &! (buffer.exists e : StringLiteral do {
+      // this loop will only look at the first element because it is the only
+      // one required to know that "one" exists in the buffer
+      "one" == e
+
+    // note: the &! is an eager and on booleans, i.e. the right hand side is
+    // executed even if the left hand side returned false. This is required here
+    // because we will delete the buffer in the last block.
+    }) &! (
+      // This is an atomic expression. It contains a single expression. Thus,
+      // operators can be placed anywhere. Usage of ';' is not allowed here.
+
+      // the 3u is an unsigned int literal
+      3u
+      // if the braced form of the do part of binders is used, it can be
+      // followed by a function call. In this case, we turn the signed result
+      // into an unsigned value allowing us to compare it to the unsigned
+      // literal
+      == buffer.count e do (null != e).unsign()
+    ) &! {
+      // and, lastly, we have a block to delete the buffer
+      delete buffer
+      // return true to ensure that the whole expression's is result is taken
+      // into account
+      true
+    }
+
+    // Now, imagine how much code it would have been to create three iterators,
+    // iterate over the container, access the current values and delete the
+    // iterators again. And, how many small mistakes one usually makes getting
+    // boiler-plate loops right.
+  } 
+}

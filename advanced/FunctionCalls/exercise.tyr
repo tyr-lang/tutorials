@@ -1,0 +1,49 @@
+/**
+ * The solution of the exercise
+ */
+type Pair[T : Type = int] {
+  var left : T;
+  var right : T;
+  
+  new (left := left : T, right := right : T);
+  
+  def apply(index : int) = switch index {
+    if 0 left
+    else right
+  }
+  def apply(this : Ref[Pair[T]], index : int) = switch index {
+    if 0 left
+    else right
+  }
+  def update(this : Ref[Pair[T]], index : int, v : T) = switch index {
+    if 0 {left = v}
+    else {right = v}
+  }
+
+  test "field" {
+    val p = new Pair(0, 1)
+    
+    0 == p.left && 1 == p.right
+  }
+
+  test "apply" {
+    val p = new Pair(0, 1)
+    
+    0 == p(0) && 1 == p(1)
+  }
+
+  test "apply var" {
+    var p = new Pair(0, 1)
+    
+    0 == p(0) && 1 == p(1)
+  }
+
+  test "update" {
+    var p = new Pair(0, 1)
+
+    p(0) = 7
+    p(1) = 23
+    
+    7 == p.left && 23 == p.right
+  }
+}

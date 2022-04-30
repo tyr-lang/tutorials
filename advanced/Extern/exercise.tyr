@@ -1,0 +1,31 @@
+/**
+ * The solution of the exercise
+ */
+type CFile <: mem.OpaquePointer["FILE"] {
+ with tyr.io.CString;
+
+  public type def open (path : CString, mode : CString) : CFile extern c.fopen;
+  public type def close (this : CFile) : int extern c.fclose;
+  public type def puts (data : CString, stream : CFile) : int extern c.fputs;
+
+  test "hello" {
+    var path = new CString("hello.txt")
+    var mode = new CString("w")
+    var text = new CString("Hello Tyr!")
+
+    val f = open(path, mode)
+    puts(text, f)
+    close(f)
+
+    delete path
+    delete mode
+    delete text
+  }
+
+
+  test "tyr.io" {
+    var f = tyr.io.CFile.open("hello.io.txt", "w")
+    f.put("Hello Tyr!")
+    delete f
+  }
+}

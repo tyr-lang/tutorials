@@ -1,0 +1,83 @@
+type point {
+  // mutable field x
+  // note: as points are flat, its mutable fields can only be updated for var
+  // instances
+  var x : int
+  var y : int
+
+  // defines a function plus
+  def plus(other : point) : point {
+    var result = new point
+    result.x = x + other.x
+    result.y = y + other.y
+
+    result
+  }
+
+  // defines an operator ==
+  // note: if the body would be just a single statement, a = can be used as a
+  // shorthand for {...}
+  def == (other : point) = x == other.x &! y == other.y
+
+  test "create mod" {
+    var p = new point
+    p.x = 3
+    p.y = 7
+
+    10 == p.x + p.y
+  }
+
+  test "val point" <: noCompile {
+    val p = new point
+    p.x = 3
+  }
+
+  test "add eq" {
+    var p = new point
+    p.x = 3
+    p.y = 7
+
+    p = p.plus(p)
+
+    var q = new point
+    q.x = 6
+    p.y = 14
+
+    q == p
+  }
+
+  // this constructor is required to allow default construction
+  new;
+  // this constructor is a short hand initializing fields x and y
+  new (x := x : int, y := y : int);
+
+  // note: although what happens here may look more complicated, it is actually
+  // possible for the optimizer to optimize all the tests in point to "true"
+  test "add eq new" {
+    var p = new point(3,7)
+    p = p.plus(p)
+
+    // note: now, we can use a val, because we won't modify q after its creation
+    val q = new point(6,14)
+
+    q == p
+  }
+
+  // exercise solution
+  def minus(other : point) : point {
+    var result = new point
+    result.x = x - other.x
+    result.y = y - other.y
+
+    result
+  }
+
+  test "minus" {
+    val p = new point(3,7)
+    val z = p.minus(p)
+
+    val q = new point(35,86)
+
+    q == q.plus(z) && q == q.minus(z) && !q == z.minus(q)
+  }
+}

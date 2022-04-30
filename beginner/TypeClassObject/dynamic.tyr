@@ -1,0 +1,61 @@
+class Upper {
+  class var instances : int = 0
+
+  val name : StringLiteral;
+
+  new (name := name : StringLiteral = "unnamed class") {
+    ++this.instances
+  }
+  delete {
+    --this.instances
+  }
+
+  def f { "call f in upper on "!!;name!!;"\n"!! }
+}
+
+class Lower <: Upper {
+  new (name : StringLiteral = "unnamed lower class") {
+    Upper.new(name)
+  }
+
+  override
+  def f { "call f in lower on "!!;name!!;"\n"!! }
+
+  test "dynamic lower" {
+    val x = new Lower
+    x.f()
+    delete x
+  }
+
+  test "dynamic upper" {
+    // create a lower instance, but forget about it and use it as an upper
+    val x : Upper = new Lower
+    // this will do the same as above, because x knows what the right f is
+    x.f()
+    delete x
+  }
+
+  test "dual upper" {
+    val x = new Lower
+    // this will call Upper's f with x; we can do that, because x is also an Upper
+    Upper.f(x)
+    delete x
+  }
+
+  test "instances" {
+    val x : Upper = new Lower
+    val y = new Upper
+
+    val first = 1 == Upper.instances &! 1 == Lower.instances
+
+    delete x
+
+    val second = 1 == Upper.instances &! 0 == Lower.instances
+
+    delete y
+
+    val third = 0 == Upper.instances &! 0 == Lower.instances
+
+    first &! second &! third
+  }
+}

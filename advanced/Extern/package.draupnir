@@ -1,0 +1,6 @@
+name=tutorials.advanced.extern
+
+with tyr.io
+
+# you can import libGL under the name gl using this line:
+# extern gl from libGL

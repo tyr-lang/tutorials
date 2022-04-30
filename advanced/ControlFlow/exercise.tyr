@@ -1,0 +1,70 @@
+/**
+ * The solution of the exercise
+ */
+type condition {
+  val guard : bool;
+  val rval : int;
+  new (guard := guard : bool, rval := rval : int);
+
+  // note: | could be used as operator symbol, but it would require a precedence
+  // that is higher than Integer.| to prevent arguments below from getting
+  // turned into bit or
+  // note: : cannot be used because it is a keyword and the expressions won't
+  // parse as expected
+  def :: (falsePath : Block[int]) : int <: operator.precedence[185]
+        = if guard rval else falsePath.eval()
+}
+
+type ternary {
+  val cond : bool;
+  new(cond := cond : bool);
+
+  type val True = new ternary(true)
+  type val False = new ternary(false)
+
+  type def to (cond : bool) = if cond True else False
+
+  // fun fact: this solution even allows you to use ? without the following |
+  // and it work as you'd expect it to.
+  def ? (truePath : Block[int]) : condition <: operator.precedence[185] {
+    val r = if(cond) truePath.eval() else 0
+
+    new condition(cond, r);
+  }
+
+
+  test "extension" <: noCompile {
+    // As of Tyr 0.6, there is no way to extend an existing type with new type
+    // members. This could be added lateron as this is just syntactic sugar for
+    // an explicit call.
+    // Also, operator overloading uses closed lookups. Thus, just having the
+    // operator in scope won't help.
+    5 == true ? 5 :: 7;
+  }
+  test "true" {
+    5 == True ? 5 :: 7;
+  }
+  test "false" {
+    7 == False ? 5 :: 7;
+  }
+  test "chain true" {
+    5 == True ? 5 :: False ? 7 :: 9;
+  }
+  test "chain false" {
+    9 == False ? 5 :: False ? 7 :: 9;
+  }
+  test "half" {
+    True ? {"unbalanced\n"!!;0}
+  }
+
+  test "use" {
+    var x = 4;
+    while (x != 0) {
+      // Note that the return true exits the test successfully from the result
+      // of the binder application. It is still a Block[int] because return has
+      // type NoReturn which is a subtype of int
+      to(--x > 0) ? {"continue\n"!!;0} :: (return true)
+    }
+    return false;
+  }
+}

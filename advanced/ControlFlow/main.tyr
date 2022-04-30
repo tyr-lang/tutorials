@@ -1,0 +1,173 @@
+/**
+ * A set of tests illustrating basic control flow concepts
+ */
+type flow {
+  test "value" {
+    // a local val or var returns its initial value
+    7 == {val x = 7}
+  }
+
+  test "if" {
+    var x = 7
+    // cannot be shortened
+    if (2 == x) {
+      x = 3
+    }
+    7 == x
+  }
+
+  test "if else" {
+    var x = 7
+    // can be shortened
+    x = (
+      if (2 == x) 3
+      else        4
+    )
+
+    4 == x
+  }
+
+  test "do while" {
+    var x = 3
+    0 == (
+      do {
+        "hello!\n"!!;
+        --x
+      } while (x != 3 && x > 0)
+    )
+  }
+
+  test "switch" {
+    var x = 3
+    // switch can be shortened
+    x = switch x {
+      if 1: 42
+      if 3: 7
+      else -1
+    }
+
+    7 == x
+  }
+
+  // print some strings, separate them and, optionally, add a begin and end
+  // note: In practice, one would operate on Strings and produce a StringBuffer
+  // note: The purpose of this example is to show a case where Tyr's expressions
+  //       can be used to create control flow that is otherwise only achievable
+  //       using gotos or runtime state tracking. So, the interesting part is
+  //       the separator.
+  type def join(elements : container.Iterable[StringLiteral],
+                separator : StringLiteral,
+                // here, begin and end default to the empty string
+                begin : StringLiteral = "", end : StringLiteral = "") {
+
+    // we could just print begin, but we can save the time if it is empty anyway
+    if(begin.length > 0U)
+      begin!!
+
+    // get an iterator over elements
+    var es = elements.iterator()
+    // if it is not empty
+    if(es.hasNext())
+      do {
+        // print the element
+        es.next()!!
+      } while (
+        // while it has a next element
+        es.hasNext() && {
+          // and if so, start the next iteration with a separator
+          separator!!;
+          // and return true here, which can be optimized out resulting in
+          // efficient control flow without resorting to labels and gotos
+          true
+        }
+      )
+    // release the iterator, it is empty now
+    delete es
+
+    // save time for empty end as well
+    if(end.length > 0U)
+      end!!
+  }
+
+  test "join" {
+    // create a container holding some strings
+    var arr = new container.ArrayBuffer[StringLiteral];
+
+    arr += "switch"
+    arr += "if"
+    arr += "else"
+    arr += "do"
+    arr += "while"
+
+    // switch | if | else | do | while
+    join (arr, " | ")
+    "\n"!!;
+
+    // [switch, if, else, do, while]
+    join (arr, begin := "[", ", ", "]")
+    "\n"!!;
+
+    delete arr
+  }
+}
+
+type Utils[T : Type] {
+  // for all elements of an iterable that fulfill cond sum the results of the
+  // evaluation of map on them
+  type def sumIf(xs   : container.Iterable[T],
+                 x    : BlockParameter[T],
+                 cond : Block[bool],
+                 map  : Block[int]) {
+    var r = 0
+    // we can use other binders here too
+    xs.foreach i do {
+      // update the parameter to the current value
+      x = i
+
+      // if the condition evaluates to true
+      // note: cond is evaluated for every element
+      if(cond.eval()) {
+        // add the result of eval to the result returned by us
+        // note: map is only evaluated for elements that fulfill cond
+        // note: it would also be fine to evaluate map twice or more if
+        // that makes sense for a binder implementation; here it does not
+        r += map.eval()
+      }
+    }
+    r
+  }
+
+  test "sum even" {
+    var xs = new container.ArrayBuffer[int]
+
+    xs += 3
+    xs += 4
+    xs += 5
+    xs += 6
+
+    // if we want to use the result we can embrace the blocks
+    10 == Utils[int].sumIf(xs) x do ({
+      // if x is even
+      0 == x % 2
+    } {
+      x
+    })
+  }
+
+  test "sum length" {
+    var xs = new container.ArrayBuffer[String]
+
+    xs += null
+    xs += "one"
+    xs += "two"
+    xs += "three"
+
+    // if we want to use the result we can embrace the whole binder
+    6 == (Utils[String].sumIf(xs) x do {
+      // if x is not null and contains 'o'
+      null != x && x.bytes().exists c do (111i8 == c)
+    } {
+      int !! x.size()
+    })
+  }
+}

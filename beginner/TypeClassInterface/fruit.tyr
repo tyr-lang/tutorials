@@ -1,0 +1,146 @@
+// A class is declared using the class keyword
+// As Fruits cannot be instantiated themselves, they have an abstract property
+// Note: type, class and interface definitions get properties and super types as
+// a list behind the operator keyword "<:". This could also be
+// class Fruit <: Object, abstract {...}.
+// However, Object is an implicit super type of any class, so it can be omitted.
+class Fruit <: abstract {
+  val weight : int;
+  new (weight := weight : int);
+
+  delete { Object.delete }
+
+  // We define that Fruits can be cut but we do not define how, i.e. there is a
+  // ";" instead of a body in the form of "=.." or "{..}". Abtsract functions
+  // require that the defining type has an abstract property.
+  def cut() : void;
+
+
+  test "abstract" <: noCompile {
+    // It is not possible to create new instances of abstract types
+    new Fruit
+  }
+}
+
+// An Apple is a Fruit, it inherits all its fields and functions
+class Apple <: Fruit {
+
+  new {
+    // all Apples have the weight 10 here
+    Fruit.new(10)
+  }
+
+  // override signals that a super type defines a function of the same name
+  // taking similar parameters that shall get a different implementation for
+  // Apples
+  override
+  def cut() = "Cut an apple!\n"!!
+
+  test "weight" {
+    val x = new Apple
+    val r = 10 == x.weight
+    // note that instances of classes are created in unmanaged RAM aka the heap
+    // therefore, we have to release them as soon as they are no longer needed
+    delete x
+    r
+  }
+
+  test "cut" {
+    val x = new Apple
+    // prints "Cut an apple!"
+    x.cut()
+    delete x
+  }
+  test "cut Fruit" {
+    val x : Fruit = new Apple
+    // prints "Cut an apple!", because Fruits define a cut function
+    x.cut()
+    delete x
+  }
+  test "cut Object" <: noCompile {
+    val x : Object = new Apple
+    // This is not allowed because object does not have a cut function
+    x.cut()
+  }
+}
+
+// Orange is also a Fruit
+// Note: The TastyFruit part is explained later; using TastyFruit implies Fruit
+class Orange <: Fruit, TastyFruit {
+
+  new {
+    // all Oranges have the weight 12 here
+    Fruit.new(12)
+  }
+
+  // override can specify the overriden members in square brackets
+  override[Fruit.cut]
+  def cut() = "Cut an orange!\n"!!
+
+  test "weight" {
+    val x = new Orange
+    val r = 12 == x.weight
+    // note that instances of classes are created in unmanaged RAM aka the heap
+    // therefore, we have to release them as soon as they are no longer needed
+    delete x
+    r
+  }
+
+  test "cut" {
+    val x = new Orange
+    // prints "Cut an orange!"
+    x.cut()
+    delete x
+  }
+
+  test "fruits" {
+    // create a collection of fruits
+    val arr = new container.ArrayBuffer[Fruit]
+
+    // add some apples and oranges
+    arr += new Orange
+    arr += new Apple
+    arr += new Orange
+    arr += new Orange
+    arr += new Apple
+    arr += new Orange
+
+    // ensure that the correct number of fruits is in arr
+    val r = 4 == arr.count f do (Orange ? f) &&
+            2 == arr.count f do (Apple ? f)
+
+    // clean up
+    arr.foreach f do {delete f}
+    delete arr
+
+    r
+  }
+
+  // note: the type checks below can all be optimized out
+  test "type check" {
+    val x = new Apple
+    val r = Apple ? x
+    delete x
+    r
+  }
+  test "type check Fruit" {
+    val x : Fruit = new Apple
+    val r = Apple ? x
+    delete x
+    r
+  }
+  test "type check Object" {
+    val x : Object = new Apple
+    val r = Apple ? x
+    delete x
+    r
+  }
+  test "type check Orange" {
+    val x = new Apple
+    val r = Orange ? x
+    delete x
+    // this is obviously not the case
+    !r
+  }
+}
+

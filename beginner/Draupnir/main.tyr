@@ -1,0 +1,24 @@
+/**
+ * A simple entry point and test to show usage of the draupnir CLI.
+ */
+type draupnir {
+
+  type def main : void <: entryPoint = "Main entry point\n"!!;
+
+  type def alt : void <: entryPoint = "Alternative entry point\n"!!;
+
+  test "a test" {
+    "Great success\n"!!;
+    true
+  }
+}
+
+/**
+ * This is a second type holding tests.
+ */
+type other {
+  test "another test" {
+    "Also successful\n"!!;
+    true
+  }
+}
