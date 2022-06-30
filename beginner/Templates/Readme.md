@@ -97,7 +97,7 @@ Even if types have members with complex implementations and inline each others b
 In programming languages, there is a thing called one definition rule (ODR).
 Basically, this means that a difinition can only happen once.
 If multiple definitions exist, all of them have to be identical.
-In todays most-used programming languages like C++ and Java, this rule has to be fulfilled by the programmer.
+In today's most-used programming languages like C++ and Java, this rule has to be fulfilled by the programmer.
 It is not enforced by the compiler or virtual machine.
 This can lead to very very complex bugs.
 They alone would be a reason to have the compiler do it for you in Tyr.
@@ -107,7 +107,7 @@ A consequence is that, in contrast to Java, a compiled library cannot be patched
 It can only be compiled again.
 
 
-### Excursion on C++ and Java
+### Excursion on Templates (Ada, C++) and Generics (Java and most others)
 
 Because some people may not believe that Tyr offers functionality that neither C++ nor Java can emulate, let me go into details here.
 
@@ -119,7 +119,17 @@ A single swap type that swaps itself can be easily defined in C++.
 However, C++ has top-down elaboration.
 Thus, cum granu salis, type definitions are evaluated from top to bottom.
 Also, as of today, the bare members of a template cannot be predefined.
-Therefore, there is no way getting our example to work in C++.
+This forces C++ to bound and checked templates on instantiation rather than definition.
+Therefore, a working copy of our example can be created in C++.
+But, if a user would do even a simple error, the compiler would miss it.
+For instance, a [version](main.cpp) where a non-existing member is accidentally used in an unused member function can be compiled and executed.
+This is an issue in that it increases the time between implementation and detection of errors in template code in C++.
+Furthermore, it limits toolsupport e.g. for IDEs depriving them from providing auto completion or similar features.
+This, again, increases software development and maintenance cost.
+As described in the next section, Ada had a fix for the issue decades ago.
+However, with Ada's coarse-grained elaboration order rules there is no way in defining the e.g. the Iterable types in the the Tyr standard library.
+Finally, note that the Ada uses the word generic for what we call template here.
+This is, however, not what basically every other language uses the word for.
 
 In Java, generics are ∀-polymoprhic, i.e. they do not work like Tyr templates as described here.
 In Java, generics do not create new types.
@@ -144,7 +154,7 @@ In Java, this is often caused by so-called fat jars.
 Admittedly, this is mostly mittigated by using maven and Java 9 module definitions.
 
 
-## Excursion Ada-style and C++-style templates
+### Excursion Ada-style and C++-style templates
 
 There are basically two ways of implementing templates.
 One is the original C++ way where a template is basically just a piece of code that will generate a type or a function when used.
