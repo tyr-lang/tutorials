@@ -119,7 +119,7 @@ A single swap type that swaps itself can be easily defined in C++.
 However, C++ has top-down elaboration.
 Thus, cum granu salis, type definitions are evaluated from top to bottom.
 Also, as of today, the bare members of a template cannot be predefined.
-This forces C++ to bound and checked templates on instantiation rather than definition.
+This forces C++ to bind and checked templates on instantiation rather than definition.
 Therefore, a working copy of our example can be created in C++.
 But, if a user would do even a simple error, the compiler would miss it.
 For instance, a [version](main.cpp) where a non-existing member is accidentally used in an unused member function can be compiled and executed.
@@ -127,8 +127,8 @@ This is an issue in that it increases the time between implementation and detect
 Furthermore, it limits toolsupport e.g. for IDEs depriving them from providing auto completion or similar features.
 This, again, increases software development and maintenance cost.
 As described in the next section, Ada had a fix for the issue decades ago.
-However, with Ada's coarse-grained elaboration order rules there is no way in defining the e.g. the Iterable types in the the Tyr standard library.
-Finally, note that the Ada uses the word generic for what we call template here.
+However, with Ada's coarse-grained elaboration order rules there is no way in defining e.g. the Iterable types in the Tyr standard library.
+Finally, note that Ada uses the word generic for what we call template here.
 This is, however, not what basically every other language uses the word for.
 
 In Java, generics are ∀-polymoprhic, i.e. they do not work like Tyr templates as described here.
