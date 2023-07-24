@@ -20,7 +20,7 @@ Values are immutable and they do not necessarily require memory.
 If a value shall be modified, a variable has to be created using the ```var``` keyword.
 Variables have an operator ```=``` allowing to update the value stored in them.
 Local variables are backed by stack-allocated memory which can be optimized out.
-In terms of lifetimen and access, variables share the behaviour of values.
+In terms of lifetime and access, variables share the behaviour of values.
 Regarding initialization, variables must have either an explicit type or an initializer but may have both.
 Example: ```var x : int; x = 7``` creates the int variable x. Then, it is set to the value 7.
 
