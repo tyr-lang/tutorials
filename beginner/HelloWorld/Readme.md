@@ -33,7 +33,7 @@ The type ```hello``` owns the function ```myMain```.
 ```myMain``` is a stateless funciton taking no parameters and returning nothing.
 It has an ```entryPoint``` property.
 This property signals that the function can serve as the first function to be executed when running this package.
-It is equivalent to ```main``` in C, Java or other languages.
+Each entry point is equivalent to ```main``` in C, Java or other languages.
 
 We are done now and can run our first program by calling ```draupnir run```.
 An executable can be created by calling ```draupnir build```.
