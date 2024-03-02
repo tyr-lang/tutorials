@@ -1,7 +1,7 @@
 This is a collection of Tyr tutorials.
 
 If you are new to Tyr, there is a [Hello World tutorial](https://github.com/tyr-lang/tutorials/tree/master/beginner/HelloWorld) starting a beginner-oriented series.
-If you are experienced in C++, Ada, Rust or similar, there is a [programmering experts cheat sheet](https://github.com/tyr-lang/tutorials/blob/master/ForProgrammingExperts.md) for Tyr.
+If you are experienced in C++, C, Ada, Rust or similar, there is a [programmering experts cheat sheet](https://github.com/tyr-lang/tutorials/blob/master/ForProgrammingExperts.md) for Tyr.
 Each tutorial comes with an executable Tyr project.
 
 Tutorials are grouped into:
