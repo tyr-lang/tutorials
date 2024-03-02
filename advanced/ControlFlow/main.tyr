@@ -41,8 +41,8 @@ type flow {
     var x = 3
     // switch can be shortened
     x = switch x {
-      if 1: 42
-      if 3: 7
+      if 1 42
+      if 3 7
       else -1
     }
 
@@ -111,13 +111,15 @@ type flow {
   }
 }
 
-type Utils[T : Type] {
+type Utils {
   // for all elements of an iterable that fulfill cond sum the results of the
   // evaluation of map on them
-  type def sumIf(xs   : container.Iterable[T],
-                 x    : BlockParameter[T],
-                 cond : Block[bool],
-                 map  : Block[int]) {
+  type def sumIf[T : Type[_]](
+    xs   : container.Iterable[T],
+    x    : BlockParameter[T],
+    cond : Block[bool],
+    map  : Block[int]) {
+
     var r = 0
     // we can use other binders here too
     xs.foreach i do {
@@ -146,7 +148,7 @@ type Utils[T : Type] {
     xs += 6
 
     // if we want to use the result we can embrace the blocks
-    10 == Utils[int].sumIf(xs) x do ({
+    10 == Utils.sumIf[int](xs) x do ({
       // if x is even
       0 == x % 2
     } {
@@ -163,9 +165,9 @@ type Utils[T : Type] {
     xs += "three"
 
     // if we want to use the result we can embrace the whole binder
-    6 == (Utils[String].sumIf(xs) x do {
+    6 == (Utils.sumIf[String](xs) x : String do {
       // if x is not null and contains 'o'
-      null != x && x.bytes().exists c do (111i8 == c)
+      null != x && x.bytes().exists c do (111u8 == c)
     } {
       int !! x.size()
     })

@@ -33,7 +33,7 @@ type ternary {
   }
 
 
-  test "extension" <: noCompile {
+  test "extension" <: noCompile[NAM_] {
     // As of Tyr 0.6, there is no way to extend an existing type with new type
     // members. This could be added lateron as this is just syntactic sugar for
     // an explicit call.
