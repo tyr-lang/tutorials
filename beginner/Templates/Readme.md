@@ -1,13 +1,14 @@
 > Authors: Timm Felden
 
-> Reviewed for Tyr Version: 0.6.1
+> Reviewed for Tyr Version: 0.7.0
 
 This tutorial is about templates.
-Templates allow a programmer to define a type-like with parameters and have the compiler insert them once they are known.
+Templates allow us to save a lot of time by reducing repetitive tasks.
+They are used to define a type-like with parameters and have the compiler insert them once they are known.
 We have seen that ```Array``` takes a parameter.
 This allows us to have one ```Array``` implementation for all types.
-This saves a lot of our lifetime.
 It, clearly, does not make sense to implement an ```Array_int``` for ```int``` and an ```Array_float``` for ```float``` and an ```Array_String``` for ```String``` and so on.
+Instead, we want to say ```Array[int]``` and have to compiler do the work for us.
 
 From a programming languages perspective, templates in Tyr are λ-polymorphic.
 This means that templates are functions on the type system.
@@ -60,9 +61,17 @@ Note that Tyr is a strictly typed language.
 If a type is defined, the compiler will check if that type makes sense.
 This applies to types taking parameters, too.
 In consequence, one cannot just use members of an argument type and hope that the user will provide one that has these members.
-Unfortunately, in Tyr 0.6, there is no workaround for this restriction.
-I.e., in Tyr 0.6, argument types are completely transparent.
 However, this is not much of an issue, as most templates work like this anyway.
+If you still want to access members, you can introduce a type defining these members and have it as an upper bound for the Type.
+Example:
+```
+class StringBox[T : Type[String]] {
+  /*
+   * Now T instances are know to be at least String.
+   * Hence, String members can be used on them.
+   */
+}
+```
 
 
 ## CT knowledge and type equivalence
