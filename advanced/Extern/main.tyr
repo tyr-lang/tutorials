@@ -12,7 +12,7 @@ type ctype {
   }
 
   test "alnum" {
-    3 == ("Pow!! .-/\\_.".bytes().count c do (isAlnum(c)))
+    3U == ("Pow!! .-/\\_.".bytes().count c do (isAlnum(c)))
   }
 
   with tyr.io.CFile;
