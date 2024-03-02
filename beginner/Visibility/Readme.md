@@ -4,6 +4,7 @@
 
 This tutorial is about visibility of entities.
 Visibility is a concept to hide implementation details from users.
+Its main purpose is to make modularization of software more efficient.
 It is a core concept of object-oriented programming.
 There, it is known as information hiding.
 The idea is that the implementer of a type or library knows all the details.

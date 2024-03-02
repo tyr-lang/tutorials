@@ -9,12 +9,12 @@ private[T] type T {
     var p : int
   }
 
-  test "private type" <: noCompile {
+  test "private type" <: noCompile[E_OOP_PRIVACY_VIOLATED] {
     // tyr.lang.ITable has default visibility but stems from tyr.lang
     var p : ITable
   }
 
-  test "private member" <: noCompile {
+  test "private member" <: noCompile[E_OOP_PRIVACY_VIOLATED] {
     var p = new container.Array[int](1)
     // data is, obviously, private
     p.data
