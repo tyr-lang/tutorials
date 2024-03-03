@@ -19,7 +19,7 @@ class Granny <: Apple, TastyFruit {
     // print yummy but sour
     f.eat()
   }
-  test "eat fruit" <: noCompile {
+  test "eat fruit" <: noCompile[NAM_NOT_FOUND] {
     val f : Fruit = new Orange
     // not every fruit is edible
     f.eat()

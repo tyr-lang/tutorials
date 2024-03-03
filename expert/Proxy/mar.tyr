@@ -1,3 +1,5 @@
+with reflection.proxy
+
 /**
  * an equivalent of Groovy's delegates can be created with proxy and implicit
  *

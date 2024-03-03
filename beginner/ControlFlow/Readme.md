@@ -1,6 +1,6 @@
 > Authors: Timm Felden
 
-> Reviewed for Tyr Version: 0.6.1
+> Reviewed for Tyr Version: 0.7.0
 
 This tutorial is about control flow in Tyr.
 It will teach you how to use variables, operators, blocks, conditional execution and loops.
@@ -48,7 +48,7 @@ if (2 == x) {
 
 
 Another form of case distinction is the ```switch``` statement.
-As of Tyr 0.6, it can be used to take an integer and continue execution based on its value.
+It can be used to take a subtype of ```tyr.lang.reflection.canSwitchOn``` like an integer and continue execution based on its value.
 This statement starts with the ```switch``` keyword and is followed by the expression yielding the value for the case distinction.
 Afterwards, a block follows containing the case handling.
 It can hold any number of cases of the form ```if```, literal integer, ```:```, expression.
@@ -56,15 +56,16 @@ It must end with an ```else``` followed by an expression.
 The ```if``` branches are executed if the value equals the literal integer.
 Otherwise, the ```else``` branch is executed.
 After execution of a branch, the control flow continues after the ```switch``` statement.
+Note: more details and advanced usage can be found in [this](https://medium.com/@feldentm/tyr-1-remake-of-switch-87be70484695) article.
 
 
 Example:
 ```
 var x = 3
 switch x {
-  if 1: { x = 42 }
-  if 3: { x = 7 }
-  else  { x = -1 }
+  if 1 { x = 42 }
+  if 3 { x = 7 }
+  else { x = -1 }
 }
 // now, x is 7
 7 == x

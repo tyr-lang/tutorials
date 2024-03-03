@@ -27,7 +27,7 @@ type point {
     10 == p.x + p.y
   }
 
-  test "val point" <: noCompile {
+  test "val point" <: noCompile[NAM_NOT_FOUND] {
     val p = new point
     p.x = 3
   }
@@ -39,9 +39,7 @@ type point {
 
     p = p.plus(p)
 
-    var q = new point
-    q.x = 6
-    p.y = 14
+    var q = new point(6, 14)
 
     q == p
   }

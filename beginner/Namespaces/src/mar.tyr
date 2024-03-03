@@ -15,7 +15,7 @@ class T {
     T == _root_.tutorials.beginner.Namespaces.T
   }
 
-  test "with" <: noCompile {
+  test "with" <: noCompile[NAM_NOT_FOUND] {
     T == localB.Namespaces.T
   }
 

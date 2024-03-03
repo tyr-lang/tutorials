@@ -16,9 +16,9 @@ class Fruit <: abstract {
   def cut() : void;
 
 
-  test "abstract" <: noCompile {
+  test "abstract" <: noCompile[E_OOP_ABSTRACT] {
     // It is not possible to create new instances of abstract types
-    new Fruit
+    new Fruit(0)
   }
 }
 
@@ -57,7 +57,7 @@ class Apple <: Fruit {
     x.cut()
     delete x
   }
-  test "cut Object" <: noCompile {
+  test "cut Object" <: noCompile[NAM_NOT_FOUND] {
     val x : Object = new Apple
     // This is not allowed because object does not have a cut function
     x.cut()
@@ -106,8 +106,8 @@ class Orange <: Fruit, TastyFruit {
     arr += new Orange
 
     // ensure that the correct number of fruits is in arr
-    val r = 4 == arr.count f do (Orange ? f) &&
-            2 == arr.count f do (Apple ? f)
+    val r = 4U == arr.count f do (Orange ? f) &&
+            2U == arr.count f do (Apple ? f)
 
     // clean up
     arr.foreach f do {delete f}

@@ -3,7 +3,7 @@
 > Reviewed for Tyr Version: 0.6.1
 
 This tutorial is about the proxy property.
-In Tyr, ```tyr.lang.proxy``` is used to let name binding continue its search in a different type.
+In Tyr, ```tyr.lang.reflection.proxy``` is used to let name binding continue its search in a different type.
 
 While this is a very powerful feature, it's only useful in library programming to realize the [proxy pattern](https://en.wikipedia.org/wiki/Proxy_pattern) transparently.
 Here, it adds a lot of usability to the resulting API.

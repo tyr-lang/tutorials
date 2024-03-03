@@ -10,7 +10,7 @@ with container.index_t
 // to write C[int]. This would not be possible if the [] would not be mandatory.
 // Because, if [] were optional, C would alias Cursor[StringLiteral] instead of
 // the type constructor itself.
-type Cursor[T : Type = StringLiteral] {
+type Cursor[T : Type[_] = StringLiteral] {
 
   // by name parameters can be used on CT argument lists
   val target : ArrayBuffer[T := T]
@@ -65,7 +65,7 @@ type Cursor[T : Type = StringLiteral] {
     r
   }
 
-  test "by wrong name" <: noCompile {
+  test "by wrong name" <: noCompile[NAM_NOT_FOUND] {
     var arr = new ArrayBuffer[StringLiteral]
     var c = new Cursor[StringLiteral](target := arr)
     
@@ -120,7 +120,7 @@ type Cursor[T : Type = StringLiteral] {
     "second" == {c.step(this := d, stride := -1); c(this := d) }
   }
 
-  test "step constructor param" <: noCompile{
+  test "step constructor param" <: noCompile[NAM_NOT_FOUND] {
     var arr = new ArrayBuffer[StringLiteral]
     // here, we get an error because the parameter is called "position"
     var d = new Cursor(target := arr, step := 2)

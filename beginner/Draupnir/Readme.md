@@ -1,9 +1,11 @@
 > Authors: Timm Felden
 
-> Reviewed for Tyr Version: 0.6.1
+> Reviewed for Tyr Version: 0.7.0
 
 This tutorial is about the Tyr package manager ```draupnir```.
-It will teach you how to use its features and how to write package definitions.
+Draupnir makes creating and running tyr code easy.
+It silently manages all the compilation steps for you when calling the ```tyr``` command.
+The tutorial will teach you how to use its features and how to write package definitions.
 
 ## Package definitions
 
@@ -85,33 +87,33 @@ If, however, sources in the search path are changed, the user has to update the 
 
 ## Command line interface
 
-Draupnir offers a help if called with ```draupnir -h```.
-Commands have individual helps, e.g. ```draupnir run -h```.
+Draupnir offers a help if called with ```tyr -h```.
+Commands have individual helps, e.g. ```tyr run -h```.
 
 ### Build, Run, Test
 
-The most important command is ```draupnir test```.
+The most important command is ```tyr test```.
 It compiles the current package and runs all its tests.
 Tests can be filtered with the ```-t``` parameter.
-Try running tests in this project with ```draupnir test -t test``` and ```draupnir test -t draupnir```.
+Try running tests in this project with ```tyr test -t test``` and ```tyr test -t draupnir```.
 
-An entry point can be executed with ```draupnir run```.
+An entry point can be executed with ```tyr run```.
 This will compile and the current package and execute the default entry point.
 If no default entry point exists, the target entry point can be provided with the ```-e``` parameter.
-Try running this project with ```draupnir run``` and ```draupnir run -e alt```.
+Try running this project with ```tyr run``` and ```tyr run -e alt```.
 Note: run can be called from anywhere to execute .tl-files with default entry points from the package repository.
-If you have a copy of the tutorials in your Tyr search path, you can run the hello world tutorial via ```draupnir run -tl tutorials.beginner.HelloWorld```.
+If you have a copy of the tutorials in your Tyr search path, you can run the hello world tutorial via ```tyr run -tl tutorials.beginner.HelloWorld```.
 
-If you want to ship an executable use ```draupnir build```.
+If you want to ship an executable use ```tyr build```.
 By default, the executable will share the package's name.
 It can be changed with the  ```-o``` parameter.
-Try creating an executable with ```draupnir run -e alt -o out```.
+Try creating an executable with ```tyr run -e alt -o out```.
 
 
 ### Install, Build-deps, Version Guards
 
-Once work on a library has been completed, it can be installed into the local repository using ```draupnir install```.
-Likewise, all libraries used by this library can be built with ```draupnir build-deps```.
+Once work on a library has been completed, it can be installed into the local repository using ```tyr install```.
+Likewise, all libraries used by this library can be built with ```tyr build-deps```.
 This is, however, usually not required as most commands will automatically build missing dependencies if the sources are in the Tyr search path.
 
 Tyr library files have guards that ensure that they are used with the dependencies that were used to compile them.
@@ -121,7 +123,7 @@ Also, it allows .tl-files to hold pointers into other .tl-files saving a lot of 
 
 ### Config
 
-Lastly, there is the ```draupnir config``` command.
+Lastly, there is the ```tyr config``` command.
 Its main purpose is to configer the Tyr search path.
 The parameter ```--clear-projects``` clears the search path.
 The parameter ```--add-project``` adds a directory to the search path.

@@ -1,6 +1,6 @@
 > Authors: Timm Felden
 
-> Reviewed for Tyr Version: 0.6.1
+> Reviewed for Tyr Version: 0.7.0
 
 This is a classical hello world tutorial.
 It will teach you how to write a small program printing "Hello world!" to the console. If you have not installed Tyr yet, follow [this guide](https://github.com/tyr-lang/releases#requirements).
@@ -35,8 +35,8 @@ It has an ```entryPoint``` property.
 This property signals that the function can serve as the first function to be executed when running this package.
 Each entry point is equivalent to ```main``` in C, Java or other languages.
 
-We are done now and can run our first program by calling ```draupnir run```.
-An executable can be created by calling ```draupnir build```.
+We are done now and can run our first program by calling ```tyr run```.
+An executable can be created by calling ```tyr build```.
 
 
 ## Tests
@@ -57,7 +57,7 @@ type hello {
 ```
 This test will print a short text.
 After that, it will tell that everything worked as expected by returning true.
-Try to run the test with ```draupnir test```.
+Try to run the test with ```tyr test```.
 It should print something like
 ```
 running 1 tests

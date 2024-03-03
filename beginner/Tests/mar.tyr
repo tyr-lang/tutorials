@@ -26,13 +26,13 @@ type T {
     true
   }
 
-  test "private API" <: noCompile {
+  test "private API" <: noCompile[NAM_NOT_FOUND_OVERLOAD] {
     var arr = new container.Array[int]
     // this is private and it should be
     null != arr.data
   }
 
-  test "typed literals" <: noCompile {
+  test "typed literals" <: noCompile[NAM_NOT_FOUND_OVERLOAD] {
     // a signed cannot be compared with an unsigned
     // also, both literals have different size
     0 == 0U

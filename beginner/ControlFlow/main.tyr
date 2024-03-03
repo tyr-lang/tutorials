@@ -12,10 +12,10 @@ type flow {
   // Note that this test has a noCompile property.
   // It tells the compiler to check that something in its body creates an error.
   // If, however, the compiler can compile the body, the test will fail.
-  test "value no update" <: noCompile {
+  test "value no update" <: noCompile[NAM_] {
     val x = 7
     // this is not allowed because values cannot be modified
-    // note: run "draupnir test -v" to see expected errors
+    // note: run "tyr test -v" to see expected errors
     // note: You will be told that "=" is not visible. This is because a value's
     //       type can itself define an operator "=" that can be used on values.
     x = 7
@@ -48,12 +48,12 @@ type flow {
     3 == x
   }
 
-  test "variable unknown" <: noCompile {
+  test "variable unknown" <: noCompile[TYP_] {
     // If we do not tell the compiler what x is, the compiler will complain.
     var x
   }
 
-  test "variable update k" <: noCompile {
+  test "variable update k" <: noCompile[NAM_NOT_FOUND] {
     var x = 7
     // We hit the wrong key and got a key.
     // As no k is visible here, the compiler will ask us to fix the code.
@@ -64,7 +64,7 @@ type flow {
     3 == x
   }
 
-  test "variable update string" <: noCompile {
+  test "variable update string" <: noCompile[NAM_NOT_FOUND] {
     var x = 7
     // update x to 3
     // note: You will be presented with an alternative.
@@ -95,7 +95,7 @@ type flow {
     4 == x
   }
 
-  test "if condition" <: noCompile{
+  test "if condition" <: noCompile[NAM_NOT_FOUND] {
     var x = 7
     // If condition requires a boolean.
     // note: You will be presented with the information that x is of 
@@ -123,7 +123,7 @@ type flow {
     }
   }
 
-  test "operators no semicolon" <: noCompile {
+  test "operators no semicolon" <: noCompile[NAM_NOT_FOUND] {
     var x = 7
     // As explained above, Tyr will get stuck trying to find matching operators.
     // The lines below are seen as "hello" !! -- x
@@ -167,9 +167,9 @@ type flow {
     // Switch will evaluate x and continue in based on its value
     switch x {
       // if it were 1 we would set it to 42
-      if 1: { x = 42 }
+      if 1 { x = 42 }
       // if it were 3 we would set it to 7
-      if 3: { x = 7 }
+      if 3 { x = 7 }
       // otherwise, we ould set it to -1
       else { x = -1 }
 
@@ -187,8 +187,8 @@ type flow {
   test "switch else missing" {
     var x = 3
     switch x {
-      if 1: { x = 42 }
-      if 3: { x = 7 }
+      if 1 { x = 42 }
+      if 3 { x = 7 }
       // an empty block indicates that we decided not to react to other cases
       else {}
     }
@@ -225,7 +225,7 @@ type flow {
     false
   }
 
-  test "return mixed void" <: noCompile {
+  test "return mixed void" <: noCompile[SYN_ILLEGAL_EXPRESSION] {
     var x = 3
     while(x > 0) {
       if(1 == x) {
@@ -328,10 +328,10 @@ type flow {
       // the 3u is an unsigned int literal
       3u
       // if the braced form of the do part of binders is used, it can be
-      // followed by a function call. In this case, we turn the signed result
-      // into an unsigned value allowing us to compare it to the unsigned
+      // followed by a function call. In this case, we turn the 64bit result
+      // into a 32bit value allowing us to compare it to the unsigned int
       // literal
-      == buffer.count e do (null != e).unsign()
+      == buffer.count e do (null != e).resize[32]()
     ) &! {
       // and, lastly, we have a block to delete the buffer
       delete buffer

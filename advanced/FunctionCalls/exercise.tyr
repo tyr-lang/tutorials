@@ -1,7 +1,7 @@
 /**
  * The solution of the exercise
  */
-type Pair[T : Type = int] {
+type Pair[T : Type[_] = int] {
   var left : T;
   var right : T;
   
