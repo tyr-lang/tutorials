@@ -68,7 +68,7 @@ type CFile <: mem.OpaquePointer["FILE"] {
 ```
 
 Exercise: Write "Hello Tyr!" into a file hello.txt without using tyr.io.CFile.
-Hint: You should use tyr.io.CString to save you a lot of work.
+Hint: You should use tyr.io.CString to save some time.
 
 
 ## Next steps
